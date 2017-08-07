@@ -1,0 +1,22 @@
+{
+   "browser_action": {
+      "default_icon": {
+         "19": "icon19.png"
+      },
+      "default_popup": "popup.html",
+      "default_title": "click to switch extensions"
+   },
+   "description": "Put a switch for extensions next to the option button. A simple way to manage on/off of extensions.",
+   "icons": {
+      "128": "icon128.png",
+      "32": "icon32.png",
+      "48": "icon48.png",
+      "64": "icon64.png"
+   },
+   "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDZlcx9uzQniI+ALhl/9T9KFKF3X0zYRgKV5UBM0gOpPdV0qK2/9P55d+zkjmDVYV1Rn5b85/+YhypinfwsbVz5ucBIW2tPAYp+dhUBTvvutQDXlP1JCGA1XjBLEYNTQjzMm7WW6pNAiNqDpS7ymemIfc7YlchgjIRMBCGJKeBt2wIDAQAB",
+   "manifest_version": 2,
+   "name": "Extension Switch",
+   "permissions": [ "management" ],
+   "update_url": "http://clients2.google.com/service/update2/crx",
+   "version": "1.0"
+}
