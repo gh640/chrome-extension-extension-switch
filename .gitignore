@@ -1,0 +1,8 @@
+# Vendor files.
+node_modules/*
+
+# Output files.
+dist/*
+
+# Mac related files.
+.DS_Store
