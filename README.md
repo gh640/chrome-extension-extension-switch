@@ -1,8 +1,6 @@
 # Google Chrome extension: Extension Switch
 
-[![Chrome Web Store](https://img.shields.io/chrome-web-store/d/gnphfcibcphlpedmaccolafjonmckcdn.svg)](https://chrome.google.com/webstore/detail/extension-switch/gnphfcibcphlpedmaccolafjonmckcdn)
-
-[![Chrome Web Store](https://img.shields.io/chrome-web-store/rating/gnphfcibcphlpedmaccolafjonmckcdn.svg)](https://chrome.google.com/webstore/detail/extension-switch/gnphfcibcphlpedmaccolafjonmckcdn)
+[![Chrome Web Store](https://img.shields.io/chrome-web-store/d/gnphfcibcphlpedmaccolafjonmckcdn.svg)](https://chrome.google.com/webstore/detail/extension-switch/gnphfcibcphlpedmaccolafjonmckcdn) [![Chrome Web Store](https://img.shields.io/chrome-web-store/rating/gnphfcibcphlpedmaccolafjonmckcdn.svg)](https://chrome.google.com/webstore/detail/extension-switch/gnphfcibcphlpedmaccolafjonmckcdn)
 
 Provides a switch to toggle statuses of installed extensions.
 
