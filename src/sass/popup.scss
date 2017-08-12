@@ -1,36 +1,17 @@
-$color-text-base: #000;
-$color-bg-base: #eee;
-$color-disabled: #666;
+// Provides styles for popup.html.
+@import "common/common";
 
 body {
-  font: {
-    family: "Open Sans", Arial, "Lucida Grande", sans-serif;
-    size: 12px;
-  };
-  margin: 0;
   min-width: 240px;
-  padding: 0;
 }
 
 h1 {
-  font: {
-    family: Verdana;
-    size: 12px;
-    weight: normal;
-  };
-  margin: 4px 0 0;
-  padding: 4px;
-
   &.h1disabled {
     color: $color-disabled;
   }
 }
 
-ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-
+.extensions {
   &.extensions-enabled li,
   &.extensions-disabled li:hover {
     background-color: $color-bg-base;
@@ -43,20 +24,20 @@ ul {
     color: $color-bg-base;
     -webkit-filter: grayscale(100%);
   }
-}
 
-li {
-  background: {
-    position: 4px center;
-    repeat: no-repeat;
-    size: 14px;
-  };
-  border-radius: 1px;
-  margin: 1px;
-  padding: 5px 22px 4px;
-  transition-duration: 0.2s;
+  li {
+    background: {
+      position: 4px center;
+      repeat: no-repeat;
+      size: 14px;
+    };
+    border-radius: 1px;
+    margin: 1px;
+    padding: 4px 0 4px 22px;
+    transition-duration: 0.2s;
 
-  &:hover {
-    cursor: pointer;
+    &:hover {
+      cursor: pointer;
+    }
   }
 }

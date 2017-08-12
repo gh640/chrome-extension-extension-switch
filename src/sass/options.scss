@@ -1,0 +1,40 @@
+// Provides styles for options.html.
+@import "common/common";
+
+.bodywrapper {
+  padding: 10px;
+}
+
+.description {
+  padding: 4px 4px 10px;
+}
+
+.extensions {
+  li {
+    border-radius: 1px;
+    cursor: pointer;
+    margin: 1px;
+    padding: 0;
+    transition-duration: 0.2s;
+    background-color: $color-bg-base;
+  }
+
+  input[type="checkbox"] {
+    display: inline-block;
+    margin-left: 4px;
+
+    &:checked + label {
+      color: $color-disabled;
+    }
+  }
+
+  label {
+    background: {
+      position: 4px center;
+      repeat: no-repeat;
+      size: 14px;
+    };
+    display: inline-block;
+    padding: 4px 0 4px 22px;
+  }
+}

@@ -23,8 +23,8 @@ function init() {
  * Add event listener.
  */
 function add_event_listeners() {
-  $(SELECTOR_LISTS).on('click', 'li', function (event) {
-    switch_extension($(this).data(EXTENSION_ID));
+  $(SELECTOR_LISTS).on('click', 'li', (event) => {
+    switch_extension($(event.target).data(EXTENSION_ID));
     event.stopPropagation();
   });
 }
@@ -33,25 +33,30 @@ function add_event_listeners() {
  * Insert extensions to the lists.
  */
 function insert_extensions_to_lists() {
-  chrome.management.getAll(function (apps) {
-    let apps_enabled = [], apps_disabled = [];
+  chrome.management.getAll((apps) => {
+    chrome.storage.sync.get('extensionsExcluded', (result) => {
+      const ids = result.extensionsExcluded ? result.extensionsExcluded : [];
+      const ownId = chrome.runtime.id;
+      let apps_enabled = [], apps_disabled = [];
 
-    for (let i = 0; i < apps.length; i++) {
-      let app = apps[i];
+      for (let i = 0; i < apps.length; i++) {
+        const app = apps[i];
 
-      if (app.type === 'extension' && app.name !== 'Extension Switch') {
-        let $item = gen_list_item(app);
+        if (app.type === 'extension' &&
+          ids.indexOf(app.id) === -1 && app.id !== ownId) {
+          const $item = gen_list_item(app);
 
-        if (app.enabled) {
-          apps_enabled.push($item);
-        } else {
-          apps_disabled.push($item);
+          if (app.enabled) {
+            apps_enabled.push($item);
+          } else {
+            apps_disabled.push($item);
+          }
         }
       }
-    }
 
-    get_target_list(true).append(apps_enabled.sort(data_comparator(EXTENSION_NAME)));
-    get_target_list(false).append(apps_disabled.sort(data_comparator(EXTENSION_NAME)));
+      get_target_list(true).append(apps_enabled.sort(data_comparator(EXTENSION_NAME)));
+      get_target_list(false).append(apps_disabled.sort(data_comparator(EXTENSION_NAME)));
+    });
   });
 }
 
@@ -59,16 +64,15 @@ function insert_extensions_to_lists() {
  * Generates a list item for an extension.
  */
 function gen_list_item(app) {
-  let $el, name;
+  const name = (app.name.length > 30) ? app.name.slice(0, 30) + "..." :  app.name;
+  const $el = $('<li>');
 
-  name = (app.name.length > 30) ? app.name.slice(0, 30) + "..." :  app.name;
-
-  $el = $('<li>');
   $el.data(EXTENSION_ID, app.id)
     .data(EXTENSION_NAME, app.name)
     .text(name);
   if (app.icons) {
-    $el.css('background-image', `url(${app.icons[0].url})`);
+    const icon = app.icons[app.icons.length - 1].url
+    $el.css('background-image', `url(${icon})`);
   }
 
   return $el;
@@ -78,13 +82,10 @@ function gen_list_item(app) {
  * Moves the extension li to the new list.
  */
 function move_extension_in_list(app) {
-  let $el, $list;
-
-  $el = $('li', SELECTOR_LISTS).filter(function (i) {
+  const $el = $('li', SELECTOR_LISTS).filter(function (i) {
     return $(this).data(EXTENSION_ID) === app.id;
   });
-
-  $list = get_target_list(app.enabled);
+  const $list = get_target_list(app.enabled);
 
   $el.detach()
     .appendTo($list);
@@ -99,11 +100,25 @@ function move_extension_in_list(app) {
  * Switches on/off a chrome extension.
  */
 function switch_extension(id) {
-  chrome.management.get(id, function (app) {
+  chrome.management.get(id, (app) => {
     chrome.management.setEnabled(app.id, !app.enabled, function () {
+
       // Fetch the updated app.
-      chrome.management.get(app.id, function (app2) {
-        move_extension_in_list(app2);
+      chrome.management.get(app.id, (app_updated) => {
+        move_extension_in_list(app_updated);
+
+        // This notification is a little annoying...
+        // const icon = app_updated.icons[app_updated.icons.length - 1].url;
+        // const status = app_updated.enabled ? 'enabled' : 'disabled';
+        // const options = {
+        //   type: 'basic',
+        //   iconUrl: icon,
+        //   title: 'Extension is switched',
+        //   message: `${app_updated.name} is ${status}`
+        // };
+        // chrome.notifications.clear('changed', (wasCleared) => {
+        //   chrome.notifications.create('changed', options);
+        // });
       });
     });
   });
@@ -120,8 +135,9 @@ function get_target_list(enabled) {
  * Helper function: Generates a comparison function with data() for sort.
  */
 function data_comparator(key) {
-  return function (a, b) {
-    let $a = $(a), $b = $(b);
+  return (a, b) => {
+    const $a = $(a);
+    const $b = $(b);
 
     if ($a.data(key) < $b.data(key)) {
       return -1;

@@ -1,18 +1,22 @@
-const webpack = require('webpack');
+// const webpack = require('webpack');
 const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const BabiliPlugin = require("babili-webpack-plugin");
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+const isProd = (process.env.NODE_ENV === 'production');
 
 const extractSass = new ExtractTextPlugin({
-  filename: 'css/[name].css',
-  disable: process.env.NODE_ENV === 'development'
+  filename: 'css/[name].css'
 });
 
-module.exports = {
+const config = {
   entry: {
-    popup: './src/popup.js'
+    popup: './src/popup.js',
+    options: './src/options.js',
+    update: './src/update.js'
   },
   output: {
     filename: 'scripts/[name].js',
@@ -25,9 +29,6 @@ module.exports = {
     //   jQuery: "jquery"
     // }),
     new CleanWebpackPlugin(['dist']),
-    new HtmlWebpackPlugin({
-      title: 'Output management'
-    }),
     new CopyWebpackPlugin([
       { from: 'src/manifest.json', ignore: ['.DS_Store'] },
       { from: 'src/html', to: 'html', ignore: ['.DS_Store'] },
@@ -36,20 +37,12 @@ module.exports = {
     ]),
     extractSass,
   ],
-  devtool: '#source-map',
   module: {
     rules: [
       {
         test: /\.scss$/,
         use: extractSass.extract({
-          use: [
-            {
-              loader: 'css-loader'
-            },
-            {
-              loader: 'sass-loader'
-            }
-          ],
+          use: ['css-loader', 'sass-loader'],
           fallback: 'style-loader'
         })
       },
@@ -66,3 +59,17 @@ module.exports = {
     ]
   }
 };
+
+if (isProd) {
+  config.plugins.push(new BabiliPlugin({}, {
+    comments: false
+  }));
+} else {
+  config.plugins.push(new HtmlWebpackPlugin({
+    title: 'Output management'
+  }));
+
+  config.devtool = '#source-map';
+}
+
+module.exports = config;

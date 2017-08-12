@@ -3,7 +3,7 @@
   "name": "Extension Switch",
   "short_name": "Extension Switch",
   "description": "Provides a switch to toggle statuses of installed extensions.",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "icons": {
     "19": "images/icon19.png",
@@ -23,7 +23,16 @@
     "default_title": "Click to switch extensions",
     "default_popup": "html/popup.html"
   },
+  "options_ui": {
+    "page": "html/options.html"
+  },
+  "background": {
+    "scripts": ["scripts/update.js"],
+    "persistent": false
+  },
   "permissions": [
-    "management"
+    "management",
+    "storage",
+    "notifications"
   ]
 }

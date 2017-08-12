@@ -1,0 +1,28 @@
+$color-text-base: #000;
+$color-bg-base: #eee;
+$color-disabled: #666;
+
+body {
+  font: {
+    family: "Open Sans", Arial, "Lucida Grande", sans-serif;
+    size: 12px;
+  };
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  font: {
+    family: Verdana;
+    size: 12px;
+    weight: normal;
+  };
+  margin: 4px 0 0;
+  padding: 4px;
+}
+
+.extensions {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
