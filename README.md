@@ -4,7 +4,7 @@
 
 Provides a switch to toggle statuses of installed extensions.
 
-![Extension Switch](https://raw.githubusercontent.com/gh640/chrome-extension-extension-switch/master/src/images/icon128.png)
+![Extension Switch](https://raw.githubusercontent.com/gh640/chrome-extension-extension-switch/master/assets/tile920x680.png)
 
 
 ## Installation
