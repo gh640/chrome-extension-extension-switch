@@ -49,7 +49,19 @@ function get_install_message_option(icon) {
  */
 function get_update_message_option(previousVersion, icon) {
   const messages = {
-    // Message for 1.2.0. The previous version needs to be specified.
+    // The previous version needs to be specified.
+    // Message for 1.3.0.
+    '1.2.0': {
+      title: 'Extension Switch is updated',
+      message: '',
+      items: [
+        {
+          title: 'new',
+          message:  'Performance improvement.'
+        }
+      ]
+    },
+    // Message for 1.2.0.
     '1.1.0': {
       title: 'Extension Switch is updated',
       message: '',
