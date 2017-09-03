@@ -1,4 +1,4 @@
-import jQuery from 'jquery';
+import cash from 'cash-dom';
 import optionsStyle from './sass/options.scss';
 
 (function ($) {
@@ -7,7 +7,7 @@ import optionsStyle from './sass/options.scss';
 
 const EXTENSION_NAME = 'extension-name';
 const SELECTOR_LISTS = '.extensions';
-const SELECTOR_CHECKS = ':checkbox';
+const SELECTOR_CHECKS = 'input[type="checkbox"]';
 
 init();
 
@@ -76,12 +76,12 @@ function make_lines_clickable() {
 function restore_settings() {
   chrome.storage.sync.get('extensionsExcluded', (result) => {
     const ids = result.extensionsExcluded ? result.extensionsExcluded : [];
-    const $checkboxes = $(SELECTOR_CHECKS, SELECTOR_LISTS);
+    const $checkboxes = $(`${SELECTOR_LISTS} ${SELECTOR_CHECKS}`);
 
     $checkboxes.each(function () {
       const $this = $(this);
 
-      if (ids.indexOf($this.prop('id')) !== -1) {
+      if (ids.indexOf($this.data('id')) !== -1) {
         $this.prop('checked', true);
       }
     });
@@ -92,11 +92,15 @@ function restore_settings() {
  * Saves the excluded extensions.
  */
 function update_settings() {
-  const $checkBoxesChecked = $(`${SELECTOR_CHECKS}:checked`, SELECTOR_LISTS);
+  const $checkBoxesChecked = $(`${SELECTOR_LISTS} ${SELECTOR_CHECKS}`)
+    .filter(function (el) {
+      return $(el).prop('checked');
+    });
 
-  const ids = $checkBoxesChecked.map(function () {
-    return $(this).prop('id');
-  }).toArray();
+  // Arguments and `this` are different from jQuery's.
+  const ids = $checkBoxesChecked.map(function (el) {
+    return $(el).data('id');
+  });
 
   const setting = {
     extensionsExcluded: ids
@@ -115,12 +119,12 @@ function gen_list_item(app) {
     .data(EXTENSION_NAME, app.name);
 
   const $checkbox = $('<input>')
-    .prop('type', 'checkbox')
-    .prop('id', app.id)
+    .attr('type', 'checkbox')
+    .data('id', app.id)
     .appendTo($item);
 
   const $label = $('<label>')
-    .prop('for', app.id)
+    .attr('for', app.id)
     .text(name)
     .appendTo($item);
 
@@ -149,4 +153,4 @@ function data_comparator(key) {
   };
 }
 
-})(jQuery);
+})(cash);

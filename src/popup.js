@@ -1,4 +1,4 @@
-import jQuery from 'jquery';
+import cash from 'cash-dom';
 import popupStyle from './sass/popup.scss';
 
 (function ($) {
@@ -37,7 +37,8 @@ function insert_extensions_to_lists() {
     chrome.storage.sync.get('extensionsExcluded', (result) => {
       const ids = result.extensionsExcluded ? result.extensionsExcluded : [];
       const ownId = chrome.runtime.id;
-      let apps_enabled = [], apps_disabled = [];
+      const apps_enabled = [];
+      const apps_disabled = [];
 
       for (let i = 0; i < apps.length; i++) {
         const app = apps[i];
@@ -54,8 +55,10 @@ function insert_extensions_to_lists() {
         }
       }
 
-      get_target_list(true).append(apps_enabled.sort(data_comparator(EXTENSION_NAME)));
-      get_target_list(false).append(apps_disabled.sort(data_comparator(EXTENSION_NAME)));
+      get_target_list(true)
+        .append(apps_enabled.sort(data_comparator(EXTENSION_NAME)));
+      get_target_list(false)
+        .append(apps_disabled.sort(data_comparator(EXTENSION_NAME)));
     });
   });
 }
@@ -82,18 +85,19 @@ function gen_list_item(app) {
  * Moves the extension li to the new list.
  */
 function move_extension_in_list(app) {
-  const $el = $('li', SELECTOR_LISTS).filter(function (i) {
-    return $(this).data(EXTENSION_ID) === app.id;
+  const $el = $(SELECTOR_LISTS).find('li');
+
+  // The argument is different from one in jQuery.
+  const $appLi = $el.filter(function (el) {
+    return $(el).data(EXTENSION_ID) === app.id;
   });
+
   const $list = get_target_list(app.enabled);
 
-  $el.detach()
-    .appendTo($list);
+  $appLi.appendTo($list);
 
-  $list.find('li')
-    .sort(data_comparator(EXTENSION_NAME))
-    .detach()
-    .appendTo($list);
+  const $items = sort($list.find('li'), data_comparator(EXTENSION_NAME));
+  $items.appendTo($list);
 }
 
 /**
@@ -132,6 +136,13 @@ function get_target_list(enabled) {
 }
 
 /**
+ * Helper function: Sorts an items list.
+ */
+function sort($items, comparator) {
+  return Array.prototype.sort.call($items, comparator);
+}
+
+/**
  * Helper function: Generates a comparison function with data() for sort.
  */
 function data_comparator(key) {
@@ -148,4 +159,4 @@ function data_comparator(key) {
   };
 }
 
-})(jQuery);
+})(cash);
