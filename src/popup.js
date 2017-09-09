@@ -8,6 +8,7 @@ import popupStyle from './sass/popup.scss';
 const EXTENSION_ID = 'extension-id';
 const EXTENSION_NAME = 'extension-name';
 const SELECTOR_LISTS = '.extensions';
+const SELECTOR_SEARCH = '#search';
 
 init();
 
@@ -26,6 +27,26 @@ function add_event_listeners() {
   $(SELECTOR_LISTS).on('click', 'li', (event) => {
     switch_extension($(event.target).data(EXTENSION_ID));
     event.stopPropagation();
+  });
+
+  // Add incremental search function.
+  $(SELECTOR_SEARCH).on('keyup', event => {
+    const value =  event.target.value.toLowerCase();
+    const $items = $(SELECTOR_LISTS).find('li');
+
+    if (value) {
+      $items.each(function (el, index) {
+        if (!el.innerHTML.toLowerCase().match(value)) {
+          $(el).addClass('hidden');
+        } else {
+          $(el).removeClass('hidden');
+        }
+      });
+    } else {
+      $items.each(function (el, index) {
+        $(el).removeClass('hidden');
+      });
+    }
   });
 }
 
