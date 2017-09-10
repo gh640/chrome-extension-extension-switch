@@ -25,13 +25,14 @@ h1 {
   &.extensions-disabled li:hover {
     background-color: $color-bg-base;
     color: $color-text-base;
+    -webkit-filter: none;
   }
 
   &.extensions-disabled li,
   &.extensions-enabled li:hover {
     background-color: $color-disabled;
     color: $color-bg-base;
-    -webkit-filter: grayscale(100%);
+    -webkit-filter: grayscale(80%);
   }
 
   li {
