@@ -20,6 +20,13 @@ Click the button in the toolbar and toggle your extensions.
 ![Capture](https://raw.githubusercontent.com/gh640/chrome-extension-extension-switch/master/assets/capture.gif)
 
 
+## Links
+
+- [Chrome Extension: Extension Switch | gotohayato](https://gotohayato.com/work/chrome-extension-switch)
+- [GitHub - gh640/chrome-extension-extension-switch: A Google Chrome extension which allows for switching extensions quickly.](https://github.com/gh640/chrome-extension-extension-switch)
+- [Extension Switch - Chrome Web Store](https://chrome.google.com/webstore/detail/extension-switch/gnphfcibcphlpedmaccolafjonmckcdn)
+
+
 ## License
 
 Licensed under the MIT license.
