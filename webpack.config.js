@@ -25,10 +25,6 @@ const config = {
     minimizer: [new TerserPlugin(), new OptimizeCSSAssetsPlugin()],
   },
   plugins: [
-    // new webpack.ProvidePlugin({
-    //   $: "jquery",
-    //   jQuery: "jquery"
-    // }),
     new CleanWebpackPlugin(['dist']),
     new CopyWebpackPlugin([
       { from: 'src/manifest.json', ignore: ['.DS_Store'] },
