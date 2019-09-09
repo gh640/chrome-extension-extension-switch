@@ -135,19 +135,6 @@ function switch_extension(id) {
       // Fetch the updated app.
       chrome.management.get(app.id, (app_updated) => {
         move_extension_in_list(app_updated);
-
-        // This notification is a little annoying...
-        // const icon = app_updated.icons[app_updated.icons.length - 1].url;
-        // const status = app_updated.enabled ? 'enabled' : 'disabled';
-        // const options = {
-        //   type: 'basic',
-        //   iconUrl: icon,
-        //   title: 'Extension is switched',
-        //   message: `${app_updated.name} is ${status}`
-        // };
-        // chrome.notifications.clear('changed', (wasCleared) => {
-        //   chrome.notifications.create('changed', options);
-        // });
       });
     });
   });
