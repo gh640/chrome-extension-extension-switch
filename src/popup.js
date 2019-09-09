@@ -51,39 +51,70 @@ function add_event_listeners() {
 }
 
 /**
+ * Get all the target extentions.
+ */
+async function get_extensions() {
+  const KEY = 'extensionsExcluded';
+  const apps = await get_apps();
+  const result = await get_storage(KEY);
+  const excluded_ids = result[KEY] || [];
+  const own_id = chrome.runtime.id;
+
+  return apps.filter(app => {
+    return (
+      app.type === 'extension' &&
+      !excluded_ids.includes(app.id) &&
+      app.id !== own_id
+    );
+  });
+}
+
+/**
  * Insert extensions to the lists.
  */
-function insert_extensions_to_lists() {
-  chrome.management.getAll((apps) => {
-    chrome.storage.sync.get('extensionsExcluded', (result) => {
-      const ids = result.extensionsExcluded ? result.extensionsExcluded : [];
-      const ownId = chrome.runtime.id;
-      const apps_enabled = [];
-      const apps_disabled = [];
+async function insert_extensions_to_lists() {
+  const apps = await get_extensions();
+  const apps_enabled = [];
+  const apps_disabled = [];
 
-      for (let i = 0; i < apps.length; i++) {
-        const app = apps[i];
+  apps.forEach(app => {
+    let $item = gen_list_item(app);
 
-        if (app.type === 'extension' &&
-          ids.indexOf(app.id) === -1 && app.id !== ownId) {
-          const $item = gen_list_item(app);
+    if (app.enabled) {
+      apps_enabled.push($item);
+    } else {
+      apps_disabled.push($item);
+    }
+  });
 
-          if (app.enabled) {
-            apps_enabled.push($item);
-          } else {
-            apps_disabled.push($item);
-          }
-        }
-      }
+  if (apps_enabled.length) {
+    get_target_list(true)
+      .append(apps_enabled.sort(data_comparator(EXTENSION_NAME)));
+  }
+  if (apps_disabled.length) {
+    get_target_list(false)
+      .append(apps_disabled.sort(data_comparator(EXTENSION_NAME)));
+  }
+}
 
-      if (apps_enabled.length) {
-        get_target_list(true)
-          .append(apps_enabled.sort(data_comparator(EXTENSION_NAME)));
-      }
-      if (apps_disabled.length) {
-        get_target_list(false)
-          .append(apps_disabled.sort(data_comparator(EXTENSION_NAME)));
-      }
+/**
+ * Get the apps using the Chrome API.
+ */
+async function get_apps() {
+  return new Promise(resolve => {
+    chrome.management.getAll(apps => {
+      resolve(apps);
+    });
+  });
+}
+
+/**
+ * Get a storage value.
+ */
+async function get_storage(key) {
+  return new Promise(resolve => {
+    chrome.storage.sync.get(key, result => {
+      resolve(result);
     });
   });
 }
@@ -128,14 +159,31 @@ function move_extension_in_list(app) {
 /**
  * Switches on/off a chrome extension.
  */
-function switch_extension(id) {
-  chrome.management.get(id, (app) => {
-    chrome.management.setEnabled(app.id, !app.enabled, function () {
+async function switch_extension(id) {
+  const app = await get_app(id);
+  await switch_app(id, !app.enabled);
+  const app_updated = await get_app(id);
+  move_extension_in_list(app_updated);
+}
 
-      // Fetch the updated app.
-      chrome.management.get(app.id, (app_updated) => {
-        move_extension_in_list(app_updated);
-      });
+/**
+ * Get an app info.
+ */
+async function get_app(id) {
+  return new Promise(resolve => {
+    chrome.management.get(id, (app) => {
+      resolve(app);
+    });
+  });
+}
+
+/**
+ * Switch the state of an app.
+ */
+async function switch_app(id, enabled) {
+  return new Promise(resolve => {
+    chrome.management.setEnabled(id, enabled, () => {
+      resolve();
     });
   });
 }
