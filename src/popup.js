@@ -76,10 +76,14 @@ function insert_extensions_to_lists() {
         }
       }
 
-      get_target_list(true)
-        .append(apps_enabled.sort(data_comparator(EXTENSION_NAME)));
-      get_target_list(false)
-        .append(apps_disabled.sort(data_comparator(EXTENSION_NAME)));
+      if (apps_enabled.length) {
+        get_target_list(true)
+          .append(apps_enabled.sort(data_comparator(EXTENSION_NAME)));
+      }
+      if (apps_disabled.length) {
+        get_target_list(false)
+          .append(apps_disabled.sort(data_comparator(EXTENSION_NAME)));
+      }
     });
   });
 }
@@ -153,7 +157,8 @@ function switch_extension(id) {
  * Gets the enabled or disabled list.
  */
 function get_target_list(enabled) {
-  return enabled ? $('.extensions-enabled') : $('.extensions-disabled');
+  const list = enabled ? $('.extensions-enabled') : $('.extensions-disabled');
+  return list.first();
 }
 
 /**
