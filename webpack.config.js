@@ -1,18 +1,13 @@
 // const webpack = require('webpack');
 const path = require('path');
-const BabiliPlugin = require("babili-webpack-plugin");
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const isProd = (process.env.NODE_ENV === 'production');
 
-const extractSass = new ExtractTextPlugin({
-  filename: 'css/[name].css'
-});
-
 const config = {
+  mode: isProd ? 'production' : 'development',
   entry: {
     popup: './src/popup.js',
     options: './src/options.js',
@@ -35,16 +30,19 @@ const config = {
       { from: 'src/images', to: 'images', ignore: ['.DS_Store'] }
       // { from: 'src/_locales', to: '_locales' }
     ]),
-    extractSass,
+    new MiniCssExtractPlugin({
+      filename: 'css/[name].css'
+    }),
   ],
   module: {
     rules: [
       {
         test: /\.scss$/,
-        use: extractSass.extract({
-          use: ['css-loader', 'sass-loader'],
-          fallback: 'style-loader'
-        })
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          'sass-loader'
+        ]
       },
       {
         test: /\.html$/,
@@ -61,15 +59,8 @@ const config = {
 };
 
 if (isProd) {
-  config.plugins.push(new BabiliPlugin({}, {
-    comments: false
-  }));
 } else {
-  config.plugins.push(new HtmlWebpackPlugin({
-    title: 'Output management'
-  }));
-
-  config.devtool = '#source-map';
+  config.devtool = 'source-map';
 }
 
 module.exports = config;
