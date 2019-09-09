@@ -3,6 +3,9 @@ const path = require('path');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+// `terser-webpack-plugin` can be used by default as webpack depends on it.
+const TerserPlugin = require('terser-webpack-plugin');
 
 const isProd = (process.env.NODE_ENV === 'production');
 
@@ -17,6 +20,9 @@ const config = {
     filename: 'scripts/[name].js',
     chunkFilename: 'scripts/[name].js',
     path: path.resolve(__dirname, 'dist')
+  },
+  optimization: {
+    minimizer: [new TerserPlugin(), new OptimizeCSSAssetsPlugin()],
   },
   plugins: [
     // new webpack.ProvidePlugin({
@@ -39,7 +45,12 @@ const config = {
       {
         test: /\.scss$/,
         use: [
-          MiniCssExtractPlugin.loader,
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              hmr: !isProd,
+            },
+          },
           'css-loader',
           'sass-loader'
         ]
