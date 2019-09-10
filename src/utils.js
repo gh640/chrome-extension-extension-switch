@@ -65,9 +65,9 @@ async function get_storage(key) {
 }
 
 /**
- * Get an app info.
+ * Get an extension info.
  */
-async function get_app(id) {
+async function get_extension(id) {
   return new Promise(resolve => {
     chrome.management.get(id, app => {
       resolve(app);
@@ -76,9 +76,9 @@ async function get_app(id) {
 }
 
 /**
- * Switch the state of an app.
+ * Switch the state of an extension.
  */
-export async function switch_app(app) {
+export async function switch_extension(app) {
   return new Promise(resolve => {
     chrome.management.setEnabled(app.id, !app.enabled, () => {
       resolve();

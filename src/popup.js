@@ -2,7 +2,7 @@ import Vue from 'vue/dist/vue.esm.js';
 import popupStyle from './sass/popup.scss';
 import {
   get_extensions,
-  switch_app,
+  switch_extension,
   item_style,
   get_name_display,
 } from './utils.js';
@@ -67,7 +67,7 @@ function init() {
       },
       // Switch on/off a chrome extension.
       async switchExtension(extension) {
-        await switch_app(extension);
+        await switch_extension(extension);
         this.refresh();
       },
       // Check if an extension item should be displayed.
