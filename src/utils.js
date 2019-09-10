@@ -1,23 +1,24 @@
 /**
  * Get all the target extentions.
  */
-export async function get_extensions() {
-  const KEY = 'extensionsExcluded';
-  const result = await get_storage(KEY);
-  const excluded_ids = result[KEY] || [];
+export async function get_extensions(all) {
+  const excluded_ids = await get_excluded_extention_ids();
   const own_id = chrome.runtime.id;
 
   return (await get_apps())
-    .filter(is_target)
+    .filter(is_target(all))
     .sort(compare_name);
 
   // Check if the app is a target.
-  function is_target(app) {
-    return (
-      app.type === 'extension' &&
-      !excluded_ids.includes(app.id) &&
-      app.id !== own_id
-    );
+  function is_target(all) {
+    return (app) => {
+      const commonCond = (
+        app.type === 'extension' &&
+        app.id !== own_id
+      );
+
+      return commonCond && (all ? true : !excluded_ids.includes(app.id))
+    };
   }
 
   // Comparator which uses `.name` property.
@@ -30,6 +31,15 @@ export async function get_extensions() {
 
     return 0;
   }
+}
+
+/**
+ * Get the excluded extension ids.
+ */
+export async function get_excluded_extention_ids() {
+  const KEY = 'extensionsExcluded';
+  const result = await get_storage(KEY);
+  return result[KEY] || [];
 }
 
 /**
@@ -74,4 +84,32 @@ export async function switch_app(app) {
       resolve();
     });
   });
+}
+
+/**
+ * Generate `style` attribute for an extension.
+ */
+export function item_style(extension) {
+  const styles = {};
+  const url = get_icon_url(extension);
+
+  if (url !== null) {
+    styles['backgroundImage'] = `url(${url})`;
+  }
+
+  return styles;
+}
+
+/**
+ * Get the extension icon url.
+ */
+function get_icon_url(extension) {
+  const icons = extension.icons;
+
+  if (icons.length > 0) {
+    let [icon] = [...icons].reverse();
+    return icon.url;
+  }
+
+  return null;
 }

@@ -1,6 +1,6 @@
 import Vue from 'vue/dist/vue.esm.js';
 import popupStyle from './sass/popup.scss';
-import { get_extensions, switch_app } from './utils.js';
+import { get_extensions, switch_app, item_style } from './utils.js';
 
 (function () {
 
@@ -31,15 +31,7 @@ function init() {
         return name.length > MAX_SIZE ? name.slice(0, MAX_SIZE) + '...' : name;
       },
       style() {
-        const styles = {};
-        const icons = this.extension.icons;
-
-        if (icons.length > 0) {
-          let [icon] = [...icons].reverse();
-          styles['backgroundImage'] = `url(${icon.url})`;
-        }
-
-        return styles;
+        return item_style(this.extension);
       },
     },
     methods: {
@@ -57,13 +49,13 @@ function init() {
       disabledExtensions: [],
       search: '',
     },
-    async created() {
+    created() {
       this.refresh();
     },
     methods: {
       // Refresh the lists.
       async refresh() {
-        const extensions = await get_extensions();
+        const extensions = await get_extensions(false);
         this.enabledExtensions = extensions.filter(e => e.enabled);
         this.disabledExtensions = extensions.filter(e => !e.enabled);
       },

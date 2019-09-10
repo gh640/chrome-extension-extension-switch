@@ -50,6 +50,12 @@ function get_install_message_option(icon) {
 function get_update_message_option(previousVersion, icon) {
   const messages = {
     // The previous version needs to be specified.
+    // Message for 1.5.1.
+    '1.5.0': {
+      title: 'Extension Switch is updated',
+      message: 'Internal structure has been improved.'
+    },
+    // Message for 1.5.0.
     '1.4.0': {
       title: 'Extension Switch is updated',
       message: 'Fixed the bug that no extension is listed.'

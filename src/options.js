@@ -1,13 +1,14 @@
-import cash from 'cash-dom';
+import Vue from 'vue/dist/vue.esm.js';
 import optionsStyle from './sass/options.scss';
+import {
+  get_extensions,
+  get_excluded_extention_ids,
+  item_style,
+} from './utils.js';
 
 (function ($) {
 
 'use strict';
-
-const EXTENSION_NAME = 'extension-name';
-const SELECTOR_LISTS = '.extensions';
-const SELECTOR_CHECKS = 'input[type="checkbox"]';
 
 init();
 
@@ -16,141 +17,46 @@ init();
  */
 function init() {
 
-  // Insert list items with checkboxes which have default values.
-  insert_extensions_to_lists();
+  const app = new Vue({
+    el: '#app',
+    data: {
+      extensions: [],
+      excludedIds: [],
+    },
+    created() {
+      this.refresh();
+    },
+    methods: {
+      // Refresh the list.
+      async refresh() {
+        this.extensions = await get_extensions(true);
+        this.excludedIds = await get_excluded_extention_ids();
+      },
+      // Check if the extension is excluded.
+      isExcluded(extension) {
+        return this.excludedIds.includes(extension.id);
+      },
+      // Provide `style` for an extension item.
+      style(extension) {
+        return item_style(extension);
+      },
+      // Switch `excluded` status of an extension.
+      switchExcludedStatus(extension) {
+        if (this.isExcluded(extension)) {
+          let index = this.excludedIds.indexOf(extension.id);
+          this.excludedIds.splice(index, 1);
+        } else {
+          this.excludedIds.push(extension.id);
+        }
 
-  // Add event handlers.
-  add_checkbox_event_handler();
-  make_lines_clickable();
-}
+        const setting = {
+          extensionsExcluded: this.excludedIds,
+        };
 
-/**
- * Inserts extensions to the lists.
- */
-function insert_extensions_to_lists() {
-  chrome.management.getAll((apps) => {
-    const ownId = chrome.runtime.id;
-    let app_items;
-
-    app_items = [];
-    for (let i = 0; i < apps.length; i++) {
-      const app = apps[i];
-
-      if (app.type === 'extension' && app.id != ownId) {
-        let $item = gen_list_item(app);
-
-        app_items.push($item);
-      }
-    }
-
-    app_items.sort(data_comparator(EXTENSION_NAME));
-
-    $(SELECTOR_LISTS).append(app_items);
-
-    restore_settings();
+        chrome.storage.sync.set(setting, () => {});
+      },
+    },
   });
 }
 
-/**
- * Adds event handler to checkboxes.
- */
-function add_checkbox_event_handler() {
-  $(SELECTOR_LISTS).on('change', SELECTOR_CHECKS, update_settings);
-}
-
-/**
- * Makes the whole line clickable.
- */
-function make_lines_clickable() {
-  $(SELECTOR_LISTS).on('click', 'li', (event) => {
-    const $checkbox = $(event.target).find(SELECTOR_CHECKS).first();
-
-    $checkbox.prop('checked', !$checkbox.prop('checked'));
-    $checkbox.trigger('change');
-  });
-}
-
-/**
- * Restores the excluded extensions.
- */
-function restore_settings() {
-  chrome.storage.sync.get('extensionsExcluded', (result) => {
-    const ids = result.extensionsExcluded ? result.extensionsExcluded : [];
-    const $checkboxes = $(`${SELECTOR_LISTS} ${SELECTOR_CHECKS}`);
-
-    $checkboxes.each(function () {
-      const $this = $(this);
-
-      if (ids.indexOf($this.data('id')) !== -1) {
-        $this.prop('checked', true);
-      }
-    });
-  });
-}
-
-/**
- * Saves the excluded extensions.
- */
-function update_settings() {
-  const $checkBoxesChecked = $(`${SELECTOR_LISTS} ${SELECTOR_CHECKS}`)
-    .filter(function (el) {
-      return $(el).prop('checked');
-    });
-
-  // Arguments and `this` are different from jQuery's.
-  const ids = $checkBoxesChecked.map(function (el) {
-    return $(el).data('id');
-  });
-
-  const setting = {
-    extensionsExcluded: ids
-  };
-
-  chrome.storage.sync.set(setting, () => {});
-}
-
-/**
- * Generates a list item for an extension.
- */
-function gen_list_item(app) {
-  const name = (app.name.length > 40) ? app.name.slice(0, 40) + "..." :  app.name;
-
-  const $item = $('<li>')
-    .data(EXTENSION_NAME, app.name);
-
-  const $checkbox = $('<input>')
-    .attr('type', 'checkbox')
-    .data('id', app.id)
-    .appendTo($item);
-
-  const $label = $('<label>')
-    .attr('for', app.id)
-    .text(name)
-    .appendTo($item);
-
-  if (app.icons) {
-    let icon = app.icons[app.icons.length - 1].url
-    $label.css('background-image', `url(${icon})`);
-  }
-
-  return $item;
-}
-
-/**
- * Helper function: Generates a comparison function with data() for sort.
- */
-function data_comparator(key) {
-  return function (a, b) {
-    const $a = $(a);
-    const $b = $(b);
-
-    if ($a.data(key) < $b.data(key)) {
-      return -1;
-    } else if ($a.data(key) > $b.data(key)) {
-      return 1;
-    }
-    return 0;
-  };
-}
-
-})(cash);
+})();
