@@ -16,30 +16,28 @@
     <div>
       <h1>Enabled</h1>
       <ul class="extensions extensions-enabled">
-        <li
+        <extension-item
           v-for="e in enabledExtensions"
+          v-if="showItem(e)"
           :key="e.id"
-          :class="liClass(e)"
-          :style="liStyle(e)"
-          @click="switchExtension(e)"
+          :extension="e"
+          @click="switchExtension"
         >
-          {{ e.name|trim(30) }}
-        </li>
+        </extension-item>
       </ul>
     </div>
 
     <div>
       <h1 class="heading-disabled">Disabled</h1>
       <ul class="extensions extensions-disabled">
-        <li
+        <extension-item
           v-for="e in disabledExtensions"
+          v-if="showItem(e)"
           :key="e.id"
-          :class="liClass(e)"
-          :style="liStyle(e)"
-          @click="switchExtension(e)"
+          :extension="e"
+          @click="switchExtension"
         >
-          {{ e.name|trim(30) }}
-        </li>
+        </extension-item>
       </ul>
     </div>
   </div>

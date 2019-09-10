@@ -8,9 +8,47 @@ import popupStyle from './sass/popup.scss';
 init();
 
 /**
- * Initializes the extension.
+ * Initialize the extension.
  */
 function init() {
+
+  // `extension-item` Vue component.
+  Vue.component('extension-item', {
+    props: {
+      extension: Object,
+    },
+    template: `<li
+      :style="style"
+      @click="onClick"
+    >
+      {{ name }}
+    </li>`,
+    computed: {
+      name() {
+        const MAX_SIZE = 30;
+        let name = this.extension.name;
+        return name.length > MAX_SIZE ? name.slice(0, MAX_SIZE) + '...' : name;
+      },
+      style() {
+        const styles = {};
+        const icons = this.extension.icons;
+
+        if (icons.length > 0) {
+          let [icon] = [...icons].reverse();
+          styles['backgroundImage'] = `url(${icon.url})`;
+        }
+
+        return styles;
+      },
+    },
+    methods: {
+      onClick() {
+        this.$emit('click', this.extension);
+      },
+    },
+  });
+
+  // Main app.
   const app = new Vue({
     el: '#app',
     data: {
@@ -22,6 +60,7 @@ function init() {
       this.refresh();
     },
     methods: {
+      // Refresh the lists.
       async refresh() {
         const extensions = await get_extensions();
         this.enabledExtensions = extensions.filter(e => e.enabled);
@@ -32,33 +71,15 @@ function init() {
         await switch_app(extension);
         this.refresh();
       },
-      liClass(extension) {
-        const classes = [];
-
-        if (this.search.length > 0) {
-          let key = this.search.toLowerCase();
-          if (extension.name.toLowerCase().match(key)) {
-          } else {
-            classes.push('hidden');
-          }
+      // Check if an extension item should be displayed.
+      showItem(extension) {
+        if (this.search.length < 1) {
+          return true;
         }
 
-        return classes;
-      },
-      liStyle(extension) {
-        const styles = {};
-
-        if (extension.icons.length > 0) {
-          let [icon] = [...extension.icons].reverse();
-          styles['backgroundImage'] = `url(${icon.url})`;
-        }
-
-        return styles;
-      },
-    },
-    filters: {
-      trim(value, length) {
-        return value.length > length ? value.slice(0, length) + '...' : value;
+        let key = this.search.toLowerCase();
+        let name = extension.name.toLowerCase();
+        return name.match(key) !== null;
       },
     },
   });
