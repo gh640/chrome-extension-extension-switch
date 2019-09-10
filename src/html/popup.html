@@ -6,17 +6,42 @@
   <link rel="stylesheet" href="../css/popup.css">
 </head>
 <body>
-  <div>
-    <input id="search" type="text" placeholder="Search">
-  </div>
-  <div>
-    <h1>Enabled</h1>
-    <ul class="extensions extensions-enabled" id="extensions-enabled"></ul>
-  </div>
+  <div id="app">
+    <div>
+      <input id="search" type="text" placeholder="Search"
+        v-model="search"
+      >
+    </div>
 
-  <div>
-    <h1 class="h1disabled">Disabled</h1>
-    <ul class="extensions extensions-disabled"></ul>
+    <div>
+      <h1>Enabled</h1>
+      <ul class="extensions extensions-enabled">
+        <li
+          v-for="e in enabledExtensions"
+          :key="e.id"
+          :class="liClass(e)"
+          :style="liStyle(e)"
+          @click="switchExtension(e)"
+        >
+          {{ e.name|trim(30) }}
+        </li>
+      </ul>
+    </div>
+
+    <div>
+      <h1 class="heading-disabled">Disabled</h1>
+      <ul class="extensions extensions-disabled">
+        <li
+          v-for="e in disabledExtensions"
+          :key="e.id"
+          :class="liClass(e)"
+          :style="liStyle(e)"
+          @click="switchExtension(e)"
+        >
+          {{ e.name|trim(30) }}
+        </li>
+      </ul>
+    </div>
   </div>
 
   <script src="../scripts/popup.js"></script>
