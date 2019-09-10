@@ -3,6 +3,7 @@ import optionsStyle from './sass/options.scss';
 import {
   get_extensions,
   get_excluded_extention_ids,
+  switch_excluded_status,
   item_style,
 } from './utils.js';
 
@@ -42,21 +43,11 @@ function init() {
       },
       // Switch `excluded` status of an extension.
       switchExcludedStatus(extension) {
-        if (this.isExcluded(extension)) {
-          let index = this.excludedIds.indexOf(extension.id);
-          this.excludedIds.splice(index, 1);
-        } else {
-          this.excludedIds.push(extension.id);
-        }
-
-        const setting = {
-          extensionsExcluded: this.excludedIds,
-        };
-
-        chrome.storage.sync.set(setting, () => {});
+        switch_excluded_status(extension.id, this.excludedIds);
       },
     },
   });
+
 }
 
 })();

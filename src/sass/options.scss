@@ -12,11 +12,14 @@
 .extensions {
   li {
     border-radius: 1px;
-    cursor: pointer;
     margin: 1px;
     padding: 4px;
     transition-duration: 0.2s;
     background-color: $color-bg-base;
+
+    &:hover {
+      cursor: pointer;
+    }
   }
 
   input[type="checkbox"] {

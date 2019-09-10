@@ -87,6 +87,29 @@ export async function switch_app(app) {
 }
 
 /**
+ * Switch the excluded setting of an extension.
+ */
+export async function switch_excluded_status(id, excludedIds) {
+  return new Promise(resolve => {
+    const index = excludedIds.indexOf(id);
+
+    if (index > -1) {
+      excludedIds.splice(index, 1);
+    } else {
+      excludedIds.push(id);
+    }
+
+    const setting = {
+      extensionsExcluded: excludedIds,
+    };
+
+    chrome.storage.sync.set(setting, () => {
+      resolve();
+    });
+  });
+}
+
+/**
  * Generate `style` attribute for an extension.
  */
 export function item_style(extension) {
