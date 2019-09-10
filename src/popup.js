@@ -46,19 +46,24 @@ function init() {
   const app = new Vue({
     el: '#app',
     data: {
-      enabledExtensions: [],
-      disabledExtensions: [],
+      extensions: [],
       search: '',
     },
     created() {
       this.refresh();
     },
+    computed: {
+      enabledExtensions() {
+        return this.extensions.filter(e => e.enabled);
+      },
+      disabledExtensions() {
+        return this.extensions.filter(e => !e.enabled);
+      },
+    },
     methods: {
       // Refresh the lists.
       async refresh() {
-        const extensions = await get_extensions(false);
-        this.enabledExtensions = extensions.filter(e => e.enabled);
-        this.disabledExtensions = extensions.filter(e => !e.enabled);
+        this.extensions = await get_extensions(false);
       },
       // Switch on/off a chrome extension.
       async switchExtension(extension) {
