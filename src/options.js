@@ -5,6 +5,7 @@ import {
   get_excluded_extention_ids,
   switch_excluded_status,
   item_style,
+  get_name_display,
 } from './utils.js';
 
 (function ($) {
@@ -14,10 +15,39 @@ import {
 init();
 
 /**
- * Initializes the extension.
+ * Initialize the extension.
  */
 function init() {
 
+  // Define a component for an extension `<li>` with a different name from
+  // `extension-item` in `popup.js`.
+  Vue.component('extension-row', {
+    props: {
+      extension: Object,
+      excluded: Boolean,
+    },
+    template: `<li @click="onClick">
+      <input type="checkbox" :checked="excluded">
+      <span :style="style"> {{ name }} </span>
+    </li>`,
+    computed: {
+      // Provide `style` for an extension item.
+      style() {
+        return item_style(this.extension);
+      },
+      name() {
+        const MAX_SIZE = 50;
+        return get_name_display(this.extension, MAX_SIZE);
+      },
+    },
+    methods: {
+      onClick() {
+        this.$emit('click', this.extension);
+      },
+    },
+  });
+
+  // Main app.
   const app = new Vue({
     el: '#app',
     data: {
@@ -32,14 +62,6 @@ function init() {
       async refresh() {
         this.extensions = await get_extensions(true);
         this.excludedIds = await get_excluded_extention_ids();
-      },
-      // Check if the extension is excluded.
-      isExcluded(extension) {
-        return this.excludedIds.includes(extension.id);
-      },
-      // Provide `style` for an extension item.
-      style(extension) {
-        return item_style(extension);
       },
       // Switch `excluded` status of an extension.
       switchExcludedStatus(extension) {

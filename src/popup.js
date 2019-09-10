@@ -1,6 +1,11 @@
 import Vue from 'vue/dist/vue.esm.js';
 import popupStyle from './sass/popup.scss';
-import { get_extensions, switch_app, item_style } from './utils.js';
+import {
+  get_extensions,
+  switch_app,
+  item_style,
+  get_name_display,
+} from './utils.js';
 
 (function () {
 
@@ -18,17 +23,13 @@ function init() {
     props: {
       extension: Object,
     },
-    template: `<li
-      :style="style"
-      @click="onClick"
-    >
+    template: `<li :style="style" @click="onClick">
       {{ name }}
     </li>`,
     computed: {
       name() {
         const MAX_SIZE = 30;
-        let name = this.extension.name;
-        return name.length > MAX_SIZE ? name.slice(0, MAX_SIZE) + '...' : name;
+        return get_name_display(this.extension, MAX_SIZE);
       },
       style() {
         return item_style(this.extension);

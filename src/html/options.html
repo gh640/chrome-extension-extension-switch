@@ -12,14 +12,14 @@
       Extensions checked here are excluded from the list of switches.
     </div>
     <ul class="extensions">
-      <li
+      <extension-row
         v-for="e in extensions"
         :key="e.id"
-        @click="switchExcludedStatus(e)"
+        :extension="e"
+        :excluded="excludedIds.includes(e.id)"
+        @click="switchExcludedStatus"
       >
-        <input type="checkbox" :checked="isExcluded(e)">
-        <span :style="style(e)"> {{ e.name }} </span>
-      </li>
+      </extension-row>
     </ul>
   </div>
 
