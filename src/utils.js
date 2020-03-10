@@ -142,5 +142,5 @@ function get_icon_url(extension) {
  */
 export function get_name_display(extension, max) {
   let name = extension.name;
-  return name.length > max ? name.slice(0, MAX_SIZE) + '...' : name;
+  return name.length > max ? name.slice(0, max) + '...' : name;
 }
