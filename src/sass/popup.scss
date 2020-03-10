@@ -6,18 +6,16 @@ body {
   padding: 4px;
 }
 
-h1 {
-  &.h1disabled {
-    color: $color-disabled;
-  }
-}
-
 #search {
   box-sizing: border-box;
   display: block;
   outline: none;
   padding: 4px;
   width: 100%;
+}
+
+.heading-disabled {
+  color: $color-disabled;
 }
 
 .extensions {
@@ -50,8 +48,4 @@ h1 {
       cursor: pointer;
     }
   }
-}
-
-.hidden {
-  display: none;
 }

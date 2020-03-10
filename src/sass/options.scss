@@ -12,29 +12,32 @@
 .extensions {
   li {
     border-radius: 1px;
-    cursor: pointer;
     margin: 1px;
-    padding: 0;
+    padding: 4px;
     transition-duration: 0.2s;
     background-color: $color-bg-base;
+
+    &:hover {
+      cursor: pointer;
+    }
   }
 
   input[type="checkbox"] {
     display: inline-block;
     margin-left: 4px;
 
-    &:checked + label {
+    &:checked + span {
       color: $color-disabled;
     }
   }
 
-  label {
+  span {
+    display: inline-block;
+    padding: 4px 0 4px 22px;
     background: {
       position: 4px center;
       repeat: no-repeat;
       size: 14px;
     };
-    display: inline-block;
-    padding: 4px 0 4px 22px;
   }
 }

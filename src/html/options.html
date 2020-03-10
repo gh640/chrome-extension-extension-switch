@@ -6,11 +6,21 @@
   <link rel="stylesheet" href="../css/options.css">
 </head>
 <body>
-  <div class="bodywrapper">
+  <div id="app" class="bodywrapper">
     <h1>Excluded extentions</h1>
-    <div class="description">Extensions checked here are excluded from the list of switches.</div>
-    <ul class="extensions"></ul>
-    <div class="status"></div>
+    <div class="description">
+      Extensions checked here are excluded from the list of switches.
+    </div>
+    <ul class="extensions">
+      <extension-row
+        v-for="e in extensions"
+        :key="e.id"
+        :extension="e"
+        :excluded="excludedIds.includes(e.id)"
+        @click="switchExcludedStatus"
+      >
+      </extension-row>
+    </ul>
   </div>
 
   <script src="../scripts/options.js"></script>
