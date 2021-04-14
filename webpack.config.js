@@ -1,7 +1,7 @@
 // const webpack = require('webpack');
 const path = require('path');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 // `terser-webpack-plugin` can be used by default as webpack depends on it.
@@ -25,13 +25,17 @@ const config = {
     minimizer: [new TerserPlugin(), new OptimizeCSSAssetsPlugin()],
   },
   plugins: [
-    new CleanWebpackPlugin(['dist']),
-    new CopyWebpackPlugin([
-      { from: 'src/manifest.json', ignore: ['.DS_Store'] },
-      { from: 'src/html', to: 'html', ignore: ['.DS_Store'] },
-      { from: 'src/images', to: 'images', ignore: ['.DS_Store'] }
-      // { from: 'src/_locales', to: '_locales' }
-    ]),
+    new CleanWebpackPlugin({
+      cleanOnceBeforeBuildPatterns: ['dist'],
+    }),
+    new CopyPlugin({
+      patterns: [
+        { from: 'src/manifest.json' },
+        { from: 'src/html', to: 'html' },
+        { from: 'src/images', to: 'images' }
+        // { from: 'src/_locales', to: '_locales' }
+      ]
+    }),
     new MiniCssExtractPlugin({
       filename: 'css/[name].css'
     }),
@@ -43,9 +47,6 @@ const config = {
         use: [
           {
             loader: MiniCssExtractPlugin.loader,
-            options: {
-              hmr: !isProd,
-            },
           },
           'css-loader',
           'sass-loader'
@@ -68,6 +69,7 @@ const config = {
 if (isProd) {
 } else {
   config.devtool = 'source-map';
+  config.plugins.push(new webpack.HotModuleReplacementPlugin());
 }
 
 module.exports = config;
