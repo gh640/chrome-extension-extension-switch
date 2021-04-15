@@ -1,3 +1,4 @@
+// Variables
 $colors-light: (
   "text-base": #111,
   "bg-body": #fff,
@@ -7,12 +8,13 @@ $colors-light: (
 );
 $colors-dark: (
   "text-base": #eee,
-  "bg-body": #222,
-  "bg-item": #282828,
+  "bg-body": #333,
+  "bg-item": #383838,
   "disabled": #444,
   "border": #999,
 );
 
+// Mixins
 @mixin color($name) {
   color: map-get($colors-light, $name);
   @media (prefers-color-scheme: dark) {
@@ -34,7 +36,7 @@ $colors-dark: (
   }
 }
 
-
+// Common styles
 body {
   font: {
     family: "Open Sans", Arial, "Lucida Grande", sans-serif;
@@ -52,14 +54,8 @@ h1 {
     size: 12px;
     weight: normal;
   };
-  margin: 4px 0 0;
-  padding: 4px;
-}
-
-.extensions {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
+  margin: .3em 0 0;
+  padding: .3em;
 }
 
 input[type="text"] {
@@ -67,4 +63,10 @@ input[type="text"] {
   @include background-color('bg-body');
   border: 1px solid;
   @include border-color('border');
+}
+
+.extensions {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
 }
