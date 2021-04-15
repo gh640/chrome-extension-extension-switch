@@ -1,6 +1,6 @@
 {
   "name": "chrome-extension-extension-switch",
-  "version": "1.5.2",
+  "version": "1.6.0",
   "description": "Provides a switch to toggle statuses of installed extensions.",
   "homepage": "https://chrome.google.com/webstore/detail/extension-switch/gnphfcibcphlpedmaccolafjonmckcdn",
   "public": false,

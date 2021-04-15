@@ -50,6 +50,11 @@ function get_install_message_option(icon) {
 function get_update_message_option(previousVersion, icon) {
   const messages = {
     // The previous version needs to be specified.
+    // Message for 1.6.0.
+    '1.5.2': {
+      title: 'Extension Switch is updated',
+      message: 'Added dark mode.'
+    },
     // Message for 1.5.2.
     '1.5.1': {
       title: 'Extension Switch is updated',

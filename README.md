@@ -13,6 +13,7 @@ Visit Chrome Web Store with your Chrome and add it.
 
 [Extension Switch | Chrome Web Store](https://chrome.google.com/webstore/detail/extension-switch/gnphfcibcphlpedmaccolafjonmckcdn)
 
+
 ## Usage
 
 Click the button in the toolbar and toggle your extensions.
