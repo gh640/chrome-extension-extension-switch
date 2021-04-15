@@ -15,22 +15,21 @@ body {
 }
 
 .heading-disabled {
-  color: $color-disabled;
 }
 
 .extensions {
   &.extensions-enabled li,
   &.extensions-disabled li:hover {
-    background-color: $color-bg-base;
-    color: $color-text-base;
-    -webkit-filter: none;
+    @include background-color('bg-item');
+    @include color('text-base');
+    filter: none;
   }
 
   &.extensions-disabled li,
   &.extensions-enabled li:hover {
-    background-color: $color-disabled;
-    color: $color-bg-base;
-    -webkit-filter: grayscale(80%);
+    @include background-color('disabled');
+    @include color('text-base');
+    filter: opacity(60%);
   }
 
   li {

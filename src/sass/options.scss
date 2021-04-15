@@ -15,7 +15,7 @@
     margin: 1px;
     padding: 4px;
     transition-duration: 0.2s;
-    background-color: $color-bg-base;
+    @include background-color('bg-item');
 
     &:hover {
       cursor: pointer;
@@ -27,7 +27,7 @@
     margin-left: 4px;
 
     &:checked + span {
-      color: $color-disabled;
+      @include color('disabled');
     }
   }
 

@@ -1,6 +1,39 @@
-$color-text-base: #000;
-$color-bg-base: #eee;
-$color-disabled: #999;
+$colors-light: (
+  "text-base": #111,
+  "bg-body": #fff,
+  "bg-item": #f4f4f4,
+  "disabled": #bbb,
+  "border": #aaa,
+);
+$colors-dark: (
+  "text-base": #eee,
+  "bg-body": #222,
+  "bg-item": #282828,
+  "disabled": #444,
+  "border": #999,
+);
+
+@mixin color($name) {
+  color: map-get($colors-light, $name);
+  @media (prefers-color-scheme: dark) {
+    color: map-get($colors-dark, $name);
+  }
+}
+
+@mixin background-color($name) {
+  background-color: map-get($colors-light, $name);
+  @media (prefers-color-scheme: dark) {
+    background-color: map-get($colors-dark, $name);
+  }
+}
+
+@mixin border-color($name) {
+  border-color: map-get($colors-light, $name);
+  @media (prefers-color-scheme: dark) {
+    border-color: map-get($colors-dark, $name);
+  }
+}
+
 
 body {
   font: {
@@ -9,6 +42,8 @@ body {
   };
   margin: 0;
   padding: 0;
+  @include color('text-base');
+  @include background-color('bg-body');
 }
 
 h1 {
@@ -25,4 +60,11 @@ h1 {
   list-style-type: none;
   margin: 0;
   padding: 0;
+}
+
+input[type="text"] {
+  @include color('text-base');
+  @include background-color('bg-body');
+  border: 1px solid;
+  @include border-color('border');
 }
