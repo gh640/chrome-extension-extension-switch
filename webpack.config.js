@@ -3,7 +3,7 @@ const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 // `terser-webpack-plugin` can be used by default as webpack depends on it.
 const TerserPlugin = require('terser-webpack-plugin');
 
@@ -22,7 +22,7 @@ const config = {
     path: path.resolve(__dirname, 'dist')
   },
   optimization: {
-    minimizer: [new TerserPlugin(), new OptimizeCSSAssetsPlugin()],
+    minimizer: [new TerserPlugin(), new CssMinimizerPlugin()],
   },
   plugins: [
     new CleanWebpackPlugin({
@@ -54,13 +54,11 @@ const config = {
       },
       {
         test: /\.html$/,
-        loader: 'file-loader?name=[name].[ext]'
+        type: 'asset/resource'
       },
       {
         test: /\.(png|svg|jpg|gif)$/,
-        use: [
-          'file-loader?name=[name].[ext]'
-        ]
+        type: 'asset/resource'
       }
     ]
   }
