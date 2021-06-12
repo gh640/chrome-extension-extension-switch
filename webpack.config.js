@@ -54,13 +54,11 @@ const config = {
       },
       {
         test: /\.html$/,
-        loader: 'file-loader?name=[name].[ext]'
+        type: 'asset/resource'
       },
       {
         test: /\.(png|svg|jpg|gif)$/,
-        use: [
-          'file-loader?name=[name].[ext]'
-        ]
+        type: 'asset/resource'
       }
     ]
   }
