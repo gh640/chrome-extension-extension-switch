@@ -1,3 +1,11 @@
+# Archived
+
+This repository for v1 is archived. I made v2 that supports Manifest v3 in the following repository ↓ .
+
+https://github.com/gh640/chrome-extension-extension-switch-v2
+
+---
+
 # Google Chrome extension: Extension Switch
 
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/d/gnphfcibcphlpedmaccolafjonmckcdn.svg)](https://chrome.google.com/webstore/detail/extension-switch/gnphfcibcphlpedmaccolafjonmckcdn) [![Chrome Web Store](https://img.shields.io/chrome-web-store/rating/gnphfcibcphlpedmaccolafjonmckcdn.svg)](https://chrome.google.com/webstore/detail/extension-switch/gnphfcibcphlpedmaccolafjonmckcdn)
